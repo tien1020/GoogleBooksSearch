@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const googleBooksController = require("../../controllers/googleController");
+const googleBooksController = require("../../controllers/googleBooksController");
 
 // Matches with "/api/googlebooks/"
 router.route("/")
