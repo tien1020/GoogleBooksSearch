@@ -41,7 +41,7 @@ class Books extends Component {
 
   handleSearchSubmit = event => {
     event.preventDefault();
-    API.searchBooks(this.state.title)
+    API.getGoogleBooks(this.state.title)
       .then(res => {
         this.setState({ books: res.data.items })
         console.log(this.state.books);
@@ -95,14 +95,13 @@ class Books extends Component {
                 <List>
                   {this.state.books.map(book => (
                     <ListItem key={book.id}>
+                      <img src={book.volumeInfo.imageLinks.thumbnail}  alt={book.volumeInfo.title}/> 
                       <Link to={"/books/" + book.id}>
                         <strong>
-                          {book.volumeInfo.title} by {book.volumeInfo.author}
+                          {book.volumeInfo.title} by {book.volumeInfo.authors}
                         </strong>
                       </Link>
-                      <ViewBtn
-                        onClick={() => this.handleViewBooks(book.volumeInfo)}
-                      />
+                       <a href={book.volumeInfo.previewLink} className="btn btn-primary">preview books</a>
                       <SaveBtn onClick={() => this.handleSaveBooks(book._id)} />
                     </ListItem>
                   ))}
