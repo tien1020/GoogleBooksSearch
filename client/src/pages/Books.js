@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import { Col, Row, Container } from "../components/Grid";
 import { List, ListItem } from "../components/List";
 import { Input, FormBtn } from "../components/Form";
-import $ from 'jquery';
+// import $ from 'jquery';
 
 class Books extends Component {
   state = {
@@ -18,32 +18,19 @@ class Books extends Component {
   };
 
   componentDidMount() {
-    // this.loadBooks();
+    this.loadBooks();
   }
 
-  loadBooks() {
-    // API.getBooks()
-    //   .then(res =>
-    //     this.setState({ books: res.data, title: "", author: "", synopsis: "" })
-    //   )
-    //   .catch(err => console.log(err));
-    $.getJSON("https://www.googleapis.com/books/v1/volumes?q=" + this.state.title)
-    .then((results) => {
-      //set state of books equal to results.items
-      this.setState({
-        books: results.items
-      })
-      console.log(this.state)
-    } 
-    );
+  loadBooks = () => {
+    if (this.state.title.length !== 0) {
+      API.searchBooks(this.state.title)
+        .then(res =>
+          this.setState({ books: res.data.items, title: "", author: "", description: "" })
+        )
+        .catch(err => console.log(err));
+    }
   };
-  
 
-  deleteBook = id => {
-    API.deleteBook(id)
-      .then(res => this.loadBooks())
-      .catch(err => console.log(err));
-  };
 
   handleInputChange = event => {
     const { name, value } = event.target;
@@ -52,24 +39,22 @@ class Books extends Component {
     });
   };
 
-  handleFormSubmit = event => {
+  handleSearchSubmit = event => {
     event.preventDefault();
-    if (this.state.title && this.state.author) {
-      API.saveBook({
-        title: this.state.title,
-        author: this.state.author,
-        synopsis: this.state.synopsis
-      })
-        .then(res => this.loadBooks())
-        .catch(err => console.log(err));
-    }
+    API.searchBooks(this.state.title)
+      .then(res => {
+        this.setState({ books: res.data.items })
+        console.log(this.state.books);
+      }
+      )
+      .catch(err => console.log(err));
   };
 
-  viewBook = event => {
+  handleViewBooks = view => {
+    window.open(`${view.previewLink}`);
+  };
 
-  }
-
-  savedBook = event => {
+  handleSaveBooks = save => {
 
   }
 
@@ -93,7 +78,7 @@ class Books extends Component {
 
               <FormBtn
                 disabled={!(this.state.title)}
-                // onClick={}
+                onClick={this.handleSearchSubmit}
               >
                 Search Book
               </FormBtn>
@@ -109,16 +94,16 @@ class Books extends Component {
               {this.state.books.length ? (
                 <List>
                   {this.state.books.map(book => (
-                    <ListItem key={book._id}>
-                      <Link to={"/books/" + book._id}>
+                    <ListItem key={book.id}>
+                      <Link to={"/books/" + book.id}>
                         <strong>
-                          {book.title} by {book.author}
+                          {book.volumeInfo.title} by {book.volumeInfo.author}
                         </strong>
                       </Link>
                       <ViewBtn
-                        onClick={() => this.viewBook(book._id)}
+                        onClick={() => this.handleViewBooks(book.volumeInfo)}
                       />
-                      <SaveBtn onClick={() => this.savedBook(book._id)} />
+                      <SaveBtn onClick={() => this.handleSaveBooks(book._id)} />
                     </ListItem>
                   ))}
                 </List>
