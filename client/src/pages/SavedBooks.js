@@ -55,25 +55,28 @@ class SavedBooks extends Component {
         <Row>
           <Col size="md-12">
             <Jumbotron>
-              <h1>Save Books</h1>
+              <h1>Saved Books</h1>
             </Jumbotron>
             <div className="card">
               {this.state.books.length ? (
                 <List>
                   {this.state.books.map(book => (
-                    <ListItem key={book.id}>
-                      {/* <img src={book.volumeInfo.imageLinks.thumbnail} alt={book.volumeInfo.title} /> */}
+                    <ListItem key={book._id}>
+                    <img src={book.image}  alt={book.title}/> 
+
                       <Link to={"/books/" + book._id}>
                         <strong>
                           <p>{book.title} </p>
-                          <p>Written by {book.authors}</p>
-                        </strong>
+                          </strong>
+                          <p>Written by {book.author}</p>
+                      
                         <p>{book.description}</p>
                       </Link>
 
                       <a href={book.previewLink} className="btn btn-primary">Preview books</a>
+                      <button type="button" class="btn btn-info" onClick={() => this.deleteBook(book._id)}>Delete</button>
 
-                      <DeleteBtn onClick={() => this.deleteBook(book._id)} ></DeleteBtn>
+                      {/* <DeleteBtn onClick={() => this.deleteBook(book._id)} ></DeleteBtn> */}
                     </ListItem>
                   ))}
                 </List>

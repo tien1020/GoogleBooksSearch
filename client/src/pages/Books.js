@@ -57,11 +57,11 @@ class Books extends Component {
   
       title: info.title,
       author: info.authors? info.authors.join(", "): info.authors,
-      description: info.description
-      // image: info.imageLinks.thumbnail ? info.imageLinks.thumbnail: "",
-      // link: info.previewLink
+      description: info.description,
+      image: info.imageLinks.thumbnail ? info.imageLinks.thumbnail: "",
+      previewLink: info.previewLink
     })
-    
+    .then(res => alert("Saved the Book"))
     .catch(err => console.log(err));
 
   };
@@ -107,14 +107,16 @@ class Books extends Component {
                       <Link to={"/books/" + book.id}>
                         <strong>
                           <p>{book.volumeInfo.title} </p>
+                          </strong>
                           <p>Written by {book.volumeInfo.authors}</p>
-                        </strong>
+                        
                         <p>{book.volumeInfo.description}</p>
                       </Link>
                     
                        <a href={book.volumeInfo.previewLink} className="btn btn-primary">Preview books</a>
+                       <button type="button" class="btn btn-warning" onClick={() => this.handleSaveBooks(book.volumeInfo)}>Save</button>
 
-                      <SaveBtn onClick={() => this.handleSaveBooks(book.volumeInfo)}>Save</SaveBtn>
+                      {/* <SaveBtn onClick={() => this.handleSaveBooks(book.volumeInfo)}>Save</SaveBtn> */}
                       
                     </ListItem>
                   ))}

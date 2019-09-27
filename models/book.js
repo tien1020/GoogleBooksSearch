@@ -5,6 +5,8 @@ const bookSchema = new Schema({
   title: { type: String, required: true },
   author: { type: String, required: true },
   description: String,
+  previewLink: String,
+  image: String,
 });
 
 const Book = mongoose.model("Book", bookSchema);
