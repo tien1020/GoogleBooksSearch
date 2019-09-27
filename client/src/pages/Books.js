@@ -7,14 +7,13 @@ import { Link } from "react-router-dom";
 import { Col, Row, Container } from "../components/Grid";
 import { List, ListItem } from "../components/List";
 import { Input, FormBtn } from "../components/Form";
-// import $ from 'jquery';
 
 class Books extends Component {
   state = {
     books:[],
     title: "",
     author: "",
-    synopsis: ""
+    description: ""
   };
 
   componentDidMount() {
@@ -50,13 +49,22 @@ class Books extends Component {
       .catch(err => console.log(err));
   };
 
-  handleViewBooks = view => {
-    window.open(`${view.previewLink}`);
+  
+
+  handleSaveBooks = info => {
+    console.log("book" + info.title);
+    API.saveBook({
+  
+      title: info.title,
+      author: info.authors? info.authors.join(", "): info.authors,
+      description: info.description
+      // image: info.imageLinks.thumbnail ? info.imageLinks.thumbnail: "",
+      // link: info.previewLink
+    })
+    
+    .catch(err => console.log(err));
+
   };
-
-  handleSaveBooks = save => {
-
-  }
 
   render() {
     return (
@@ -98,11 +106,16 @@ class Books extends Component {
                       <img src={book.volumeInfo.imageLinks.thumbnail}  alt={book.volumeInfo.title}/> 
                       <Link to={"/books/" + book.id}>
                         <strong>
-                          {book.volumeInfo.title} by {book.volumeInfo.authors}
+                          <p>{book.volumeInfo.title} </p>
+                          <p>Written by {book.volumeInfo.authors}</p>
                         </strong>
+                        <p>{book.volumeInfo.description}</p>
                       </Link>
-                       <a href={book.volumeInfo.previewLink} className="btn btn-primary">preview books</a>
-                      <SaveBtn onClick={() => this.handleSaveBooks(book._id)} />
+                    
+                       <a href={book.volumeInfo.previewLink} className="btn btn-primary">Preview books</a>
+
+                      <SaveBtn onClick={() => this.handleSaveBooks(book.volumeInfo)}>Save</SaveBtn>
+                      
                     </ListItem>
                   ))}
                 </List>

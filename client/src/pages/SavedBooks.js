@@ -10,15 +10,31 @@ import { List, ListItem } from "../components/List";
 
 class SavedBooks extends Component {
   state = {
-    book: {}
+    books: []
   };
   // When this component mounts, grab the book with the _id of this.props.match.params.id
   // e.g. localhost:3000/books/599dcb67f0f16317844583fc
+
+
   componentDidMount() {
-    API.getBook(this.props.match.params.id)
-      .then(res => this.setState({ book: res.data }))
+    this.loadBooks();
+
+  }
+  loadBooks = () => {
+    API.getBooks()
+      .then(res =>
+    {
+          this.setState ({ books: res.data })
+          console.log(res.data)
+
+    }
+        
+        )
+
       .catch(err => console.log(err));
   }
+
+
   deleteBook = id => {
     API.deleteBook(id)
       .then(res => this.loadBooks())
@@ -30,46 +46,44 @@ class SavedBooks extends Component {
         <Row>
           <Col size="md-12">
             <Jumbotron>
-            <h1>(React) Google Books Search</h1>
+              <h1>(React) Google Books Search</h1>
               <h2>Search for and Save Books of Interest.</h2>
-             
+
             </Jumbotron>
           </Col>
         </Row>
         <Row>
-          <Col size="md-10 md-offset-1">
+          <Col size="md-12">
+            <Jumbotron>
+              <h1>Save Books</h1>
+            </Jumbotron>
             <div className="card">
-            
-              <h1>Saved Books</h1>
-              {/* <p>
-              Title: {this.state.book.title} </p>
-              <p>Author: {this.state.book.author}</p>
-                <p>{this.state.book.synopsis}
-              </p> */}
               {this.state.books.length ? (
-              <List>
-                {this.state.books.map(book => (
-                  <ListItem key={book._id}>
-                    <Link to={"/books/" + book._id}>
-                      <strong>
-                       <p> {book.title} </p>
-                       <p> Written by {book.author} </p>
-                      </strong>
-                    </Link>
-                    <ViewBtn
-                      onClick={() => this.viewBook(book._id)}
-                  />
-                    <DeleteBtn onClick={() => this.savedBook(book._id)} />
-                  </ListItem>
-                ))}
-              </List>
-            ) : (
-              <h3>No Results to Display</h3>
-            )}
+                <List>
+                  {this.state.books.map(book => (
+                    <ListItem key={book.id}>
+                      {/* <img src={book.volumeInfo.imageLinks.thumbnail} alt={book.volumeInfo.title} /> */}
+                      <Link to={"/books/" + book._id}>
+                        <strong>
+                          <p>{book.title} </p>
+                          <p>Written by {book.authors}</p>
+                        </strong>
+                        <p>{book.description}</p>
+                      </Link>
+
+                      <a href={book.previewLink} className="btn btn-primary">Preview books</a>
+
+                      <DeleteBtn onClick={() => this.deleteBook(book._id)} ></DeleteBtn>
+                    </ListItem>
+                  ))}
+                </List>
+              ) : (
+                  <h3>No Results to Display</h3>
+                )}
             </div>
           </Col>
         </Row>
-  
+
       </Container>
     );
   }

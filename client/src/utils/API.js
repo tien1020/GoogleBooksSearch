@@ -9,6 +9,7 @@ export default {
 
   // Gets all books
   getBooks: function() {
+    console.log("Book Book")
     return axios.get("/api/books");
   },
   // Gets the book with the given id
@@ -21,6 +22,7 @@ export default {
   },
   // Saves a book to the database
   saveBook: function(bookData) {
+    console.log(bookData)
     return axios.post("/api/books", bookData);
   }
 };
